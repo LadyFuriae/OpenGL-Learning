@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include<glad/glad.h>
 #include<cglm/cglm.h>
+//FANCY SHADER
 
 #define SDL_MAIN_HANDLED
 #define BUFFER_OBJECT_COUNT 1
