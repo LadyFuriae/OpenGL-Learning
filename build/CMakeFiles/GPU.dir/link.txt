@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/GPU.dir/main.c.o /home/ladyfuriae/CPrograms/glad.o -o GPU  -lSDL3 -lGL -lm -ldl 

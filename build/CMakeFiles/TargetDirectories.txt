@@ -1,3 +1,0 @@
-/home/ladyfuriae/CPrograms/build/CMakeFiles/GPU.dir
-/home/ladyfuriae/CPrograms/build/CMakeFiles/edit_cache.dir
-/home/ladyfuriae/CPrograms/build/CMakeFiles/rebuild_cache.dir
