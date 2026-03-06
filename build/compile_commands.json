@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/ladyfuriae/CPrograms/build",
+  "command": "/usr/bin/gcc -I/home/ladyfuriae/CPrograms -I/home/ladyfuriae/CPrograms/.vscode -I/home/ladyfuriae/CPrograms/src -I/home/ladyfuriae/CPrograms/external -isystem /home/ladyfuriae/CPrograms/external/glad/include -g -std=gnu2x -pedantic -Wall -Wextra -o CMakeFiles/GPU.dir/main.c.o -c /home/ladyfuriae/CPrograms/main.c",
+  "file": "/home/ladyfuriae/CPrograms/main.c",
+  "output": "CMakeFiles/GPU.dir/main.c.o"
+}
+]
