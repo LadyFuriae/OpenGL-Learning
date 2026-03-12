@@ -11,14 +11,23 @@ pkg_check_modules(SDL3 REQUIRED sdl3)
 
 # Importar glad.o (objeto precompilado)
 set(GLAD_OBJECT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/glad.o")
-add_library(glad OBJECT IMPORTED)
+add_library(glad OBJECT IMPORTED
+        src/Camera/camera.h
+        src/Camera/camera.c
+        src/App/App.h)
 set_target_properties(glad PROPERTIES IMPORTED_OBJECTS "${GLAD_OBJECT_PATH}")
 target_include_directories(glad INTERFACE external/glad/include)
 
 # Buscar TODOS los .c recursivamente, excluyendo los que están en build/, external/ o CMakeFiles/
 file(GLOB_RECURSE ALL_C_FILES "*.c")
 list(FILTER ALL_C_FILES EXCLUDE REGEX ".*/(build|external|CMakeFiles)/.*")
-add_executable(GPU ${ALL_C_FILES})
+add_executable(GPU ${ALL_C_FILES}
+        src/App/App.c
+        src/App/App.h
+        src/App/WinCfg.h
+        src/App/WinCfg.c
+        src/Shader/Shader.h
+        src/Shader/Shader.c)
 
 # --- Incluir TODOS los subdirectorios recursivamente (excepto los excluidos) ---
 set(INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})  # La raíz siempre incluida
