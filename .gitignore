@@ -87,10 +87,15 @@ CMakeUserPresets.json
 *.ipdb
 *.iobj
 *.ilk
+*.yml
+*.md
+*.png
+
 Debug/
 Release/
 x64/
 Win32/
+external/
 
 # IDE directories (optional, add if you want to ignore them)
 .vscode/

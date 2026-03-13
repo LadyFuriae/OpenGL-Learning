@@ -70,7 +70,7 @@ bool LinkShaderProgram(const int ID_Program)
     return true;
 }
 
-int ManageShaders()
+int SetCubeShader()
 {
     Shader VertexShader;
 
@@ -99,4 +99,35 @@ int ManageShaders()
     glDeleteShader(FragmentShader.ID);
 
     return ID_Program;
+}
+
+int SetLightShader()
+{
+    Shader VertexShader;
+
+    if (!CreateShader(&VertexShader, "../src/ShaderSrc/VertexShader.glsl", GL_VERTEX_SHADER))
+        return -1;
+
+    Shader FragmentShader;
+    if (!CreateShader(&FragmentShader, "../src/ShaderSrc/LightFG.glsl", GL_FRAGMENT_SHADER))
+        return -1;
+
+    glCompileShader(VertexShader.ID);
+    if (!CheckShaderComp(&VertexShader))
+        return -1;
+
+    glCompileShader(FragmentShader.ID);
+    if (!CheckShaderComp(&FragmentShader))
+        return -1;
+
+    int ID_Program = glCreateProgram();
+    glAttachShader(ID_Program, VertexShader.ID);
+    glAttachShader(ID_Program, FragmentShader.ID);
+
+    LinkShaderProgram(ID_Program);
+    glDeleteShader(VertexShader.ID);
+    glDeleteShader(FragmentShader.ID);
+
+    return ID_Program;
+
 }

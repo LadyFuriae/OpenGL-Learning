@@ -14,6 +14,7 @@
 //FANCY SHADER
 
 #define aPOS_ID 0
+#define aNORMAL_ID 1
 #define aColor_ID 1
 #define aTexPos_ID 2
 
@@ -22,6 +23,7 @@
 #define STRING_COUNT 1
 #define FIGURE_COMPONENT_NUM 3
 #define TEX_COMPONENT_NUM 2
+#define NORMAL_COMPONENTS_NUM 3
 #define NOEMNTS(x) (int)(sizeof(x) / sizeof((x)[0]))
 
 static bool Running = false;
@@ -33,7 +35,8 @@ typedef struct
 {
    float x, y, z;
   // float r, g, b;
-   float t, s;
+   //float t, s;
+   float nx, ny, nz;
 } Vertex;
 
 unsigned int GenAndBindVAO()
@@ -75,8 +78,10 @@ unsigned int PrepareRectangle(Vertex Vertices[], int VerticesCount, unsigned int
    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndicesCount, Indices, GL_STATIC_DRAW);
    glVertexAttribPointer(aPOS_ID, FIGURE_COMPONENT_NUM, GL_FLOAT, GL_FALSE,  sizeof(Vertex), nullptr);
    glEnableVertexAttribArray(aPOS_ID);
-   glVertexAttribPointer(aTexPos_ID, TEX_COMPONENT_NUM, GL_FLOAT, GL_FALSE,  sizeof(Vertex), (void*)(3 * sizeof(float)));
-   glEnableVertexAttribArray(aTexPos_ID);
+   //glVertexAttribPointer(aTexPos_ID, TEX_COMPONENT_NUM, GL_FLOAT, GL_FALSE,  sizeof(Vertex), (void*)(3 * sizeof(float)));
+   //glEnableVertexAttribArray(aTexPos_ID);
+   glVertexAttribPointer(aNORMAL_ID, NORMAL_COMPONENTS_NUM, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
+   glEnableVertexAttribArray(aNORMAL_ID);
    //glVertexAttribPointer(aColor_ID, FIGURE_FIGURE_COMPONENT_NUM, GL_FLOAT, GL_FALSE,  sizeof(Vertex), (void*)(3 * sizeof(float)));
    //glEnableVertexAttribArray(aColor_ID);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -102,42 +107,47 @@ int main()
 
    Vertex Vertices1[] =
    {
-      {-0.5f, -0.5f, -0.5f,  0.0f, 0.0f},
-  {  0.5f, -0.5f, -0.5f,  1.0f, 0.0f},
-      {  0.5f,  0.5f, -0.5f,  1.0f, 1.0f},
-      {  0.5f,  0.5f, -0.5f,  1.0f, 1.0f},
-      { -0.5f,  0.5f, -0.5f,  0.0f, 1.0f},
-      { -0.5f, -0.5f, -0.5f,  0.0f, 0.0f},
-      { -0.5f, -0.5f,  0.5f,  0.0f, 0.0f},
-      {  0.5f, -0.5f,  0.5f,  1.0f, 0.0f},
-      {  0.5f,  0.5f,  0.5f,  1.0f, 1.0f},
-      {  0.5f,  0.5f,  0.5f,  1.0f, 1.0f},
-      { -0.5f,  0.5f,  0.5f,  0.0f, 1.0f},
-      { -0.5f, -0.5f,  0.5f,  0.0f, 0.0f},
-      { -0.5f,  0.5f,  0.5f,  1.0f, 0.0f},
-      { -0.5f,  0.5f, -0.5f,  1.0f, 1.0f},
-      { -0.5f, -0.5f, -0.5f,  0.0f, 1.0f},
-      { -0.5f, -0.5f, -0.5f,  0.0f, 1.0f},
-      { -0.5f, -0.5f,  0.5f,  0.0f, 0.0f},
-      { -0.5f,  0.5f,  0.5f,  1.0f, 0.0f},
-      {  0.5f,  0.5f,  0.5f,  1.0f, 0.0f},
-      {  0.5f,  0.5f, -0.5f,  1.0f, 1.0f},
-      {  0.5f, -0.5f, -0.5f,  0.0f, 1.0f},
-      {  0.5f, -0.5f, -0.5f,  0.0f, 1.0f},
-      {  0.5f, -0.5f,  0.5f,  0.0f, 0.0f},
-      {  0.5f,  0.5f,  0.5f,  1.0f, 0.0f},
-      { -0.5f, -0.5f, -0.5f,  0.0f, 1.0f},
-      {  0.5f, -0.5f, -0.5f,  1.0f, 1.0f},
-      {  0.5f, -0.5f,  0.5f,  1.0f, 0.0f},
-      {  0.5f, -0.5f,  0.5f,  1.0f, 0.0f},
-      { -0.5f, -0.5f,  0.5f,  0.0f, 0.0f},
-      { -0.5f, -0.5f, -0.5f,  0.0f, 1.0f},
-      { -0.5f,  0.5f, -0.5f,  0.0f, 1.0f},
-      {  0.5f,  0.5f, -0.5f,  1.0f, 1.0f},
-      {  0.5f,  0.5f,  0.5f,  1.0f, 0.0f},
-      {  0.5f,  0.5f,  0.5f,  1.0f, 0.0f},
-      { -0.5f,  0.5f,  0.5f,  0.0f, 0.0f},
-      { -0.5f,  0.5f, -0.5f,  0.0f, 1.0f}
+         {-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f},
+         { 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f},
+         { 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f},
+         { 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f},
+         {-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f},
+         {-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f},
+
+         {-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f},
+         { 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f},
+         { 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f},
+         { 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f},
+         {-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f},
+         {-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f},
+
+         {-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f},
+         {-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f},
+         {-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f},
+         {-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f},
+         {-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f},
+         {-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f},
+
+         { 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f},
+         { 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f},
+         { 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f},
+         { 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f},
+         { 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f},
+         { 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f},
+
+         {-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f},
+         { 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f},
+         { 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f},
+         { 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f},
+         {-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f},
+         {-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f},
+
+         {-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f},
+         { 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f},
+         { 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f},
+         { 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f},
+         {-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f},
+         {-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f}
    };
 
    unsigned int Indices1[] =
@@ -145,46 +155,56 @@ int main()
       0,1,2,
       0,2,3
    };
-
-   //glEnable(GL_BLEND);// you enable blending function
-   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    
-   const int ID_Program = ManageShaders();
-   if (!ID_Program)
+   const int ID_CubeProgram  = SetCubeShader();
+   const int ID_LightProgram = SetLightShader();
+
+   if (!ID_CubeProgram)
       return -1;
 
-   glUseProgram(ID_Program);
-   CreateSample(ID_Program, "Texture1", 0);
-   CreateSample(ID_Program, "Texture2", 1);
+   if(!ID_LightProgram)
+      return -1;
 
-   Texture ContainerTexture;
-   LoadTexture(&ContainerTexture, "../game/textures/container.jpg");
-   CreateTexture(&ContainerTexture, GL_TEXTURE_2D, 0,  1, GL_RGB);
-   SetTextureParams(&ContainerTexture);
-   GenerateTexture(&ContainerTexture);
+   glUseProgram(ID_CubeProgram);
 
-   Texture HappyTexture;
-   LoadTexture(&HappyTexture, "../game/textures/awesomeface.png");
-   CreateTexture(&HappyTexture, GL_TEXTURE_2D,1, 1, GL_RGBA);
-   SetTextureParams(&HappyTexture);
-   GenerateTexture(&HappyTexture);
+   //CreateSample(ID_CubeProgram, "Texture1", 0);
+   //CreateSample(ID_CubeProgram, "Texture2", 1);
+//
+   //Texture ContainerTexture;
+   //LoadTexture(&ContainerTexture, "../game/textures/container.jpg");
+   //CreateTexture(&ContainerTexture, GL_TEXTURE_2D, 0,  1, GL_RGB);
+   //SetTextureParams(&ContainerTexture);
+   //GenerateTexture(&ContainerTexture);
+//
+   //Texture HappyTexture;
+   //LoadTexture(&HappyTexture, "../game/textures/awesomeface.png");
+   //CreateTexture(&HappyTexture, GL_TEXTURE_2D,1, 1, GL_RGBA);
+   //SetTextureParams(&HappyTexture);
+   //GenerateTexture(&HappyTexture);
 
    const unsigned int VAO1 = PrepareRectangle(Vertices1, NOEMNTS(Vertices1), Indices1, sizeof(Indices1));
-   //const unsigned int VAO2 = PrepareRectangle(Vertices2, NOEMNTS(Vertices2), Indices2, sizeof(Indices2));
+   const unsigned int VAOLight = PrepareRectangle(Vertices1, NOEMNTS(Vertices1), Indices1, sizeof(Indices1));
    
    Running = true;
-   const int Timer = glGetUniformLocation(ID_Program, "Timer");
-   const int ID_X = glGetUniformLocation(ID_Program, "xCoordinate");
-   const int ID_Y = glGetUniformLocation(ID_Program, "yCoordinate");
+   const int Timer = glGetUniformLocation(ID_CubeProgram, "Timer");
 
-   float x = 0.0f;
-   float y = 0.0f;
+   const int MatrixUniform = glGetUniformLocation(ID_CubeProgram, "Trans");
+   const int UModel = glGetUniformLocation(ID_CubeProgram, "Model");
+   const int UView = glGetUniformLocation(ID_CubeProgram, "View");
+   const int UProjection = glGetUniformLocation(ID_CubeProgram, "Projection");
 
-   const int MatrixUniform = glGetUniformLocation(ID_Program, "Trans");
 
-   const int UModel = glGetUniformLocation(ID_Program, "Model");
-   const int UView = glGetUniformLocation(ID_Program, "View");
-   const int UProjection = glGetUniformLocation(ID_Program, "Projection");
+   const int ULighTrans = glGetUniformLocation(ID_LightProgram, "Trans");
+   const int UlightModel = glGetUniformLocation(ID_LightProgram, "Model");
+   const int ULightView = glGetUniformLocation(ID_LightProgram, "View");
+   const int ULightProjection = glGetUniformLocation(ID_LightProgram, "Projection");
+
+   const int ULight = glGetUniformLocation(ID_CubeProgram, "LightColor");
+   const int UobjColor = glGetUniformLocation(ID_CubeProgram, "ObjColor");
+
+   glUniform3f(ULight, 1.0f, 1.0f, 1.0f);
+   glUniform3f(UobjColor, 1.0f, 0.5f, 0.31f);
+
    mat4 Trans = GLM_MAT4_IDENTITY_INIT;
 
    glEnable(GL_DEPTH_TEST);
@@ -202,6 +222,17 @@ int main()
    SDL_SetWindowRelativeMouseMode(app.Window, isEnabled);
    float mouseX, mouseY;
    const bool* State = SDL_GetKeyboardState(nullptr);
+
+   vec3 lightPos = {-1.2f, 1.0f, -2.0f };
+   glUseProgram(ID_CubeProgram);
+   int lightpos_ID = glGetUniformLocation(ID_CubeProgram, "LightPosition");
+   int lightcolor_ID = glGetUniformLocation(ID_CubeProgram, "LightColor");
+   int ViewPos_ID = glGetUniformLocation(ID_CubeProgram, "ViewPos");
+   glUniform3f(lightpos_ID, lightPos[0], lightPos[1], lightPos[2]);
+   glUniform3f(lightcolor_ID, 1.0f, 1.0f, 1.0f);
+   mat4 LightTransMatrix = GLM_MAT4_IDENTITY_INIT;
+   glm_translate(LightTransMatrix, lightPos);
+
    while(Running)
    {
       SDL_Event event;
@@ -235,6 +266,7 @@ int main()
       }
       SetViewCameraMatrix(&camera);
 
+      glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       const float Time = SDL_GetTicks() / 1000.0f;
@@ -246,29 +278,28 @@ int main()
 
       mat4 ModelMatrix = GLM_MAT4_IDENTITY_INIT;
 
+      glUseProgram(ID_CubeProgram);
 
+      glUniform3f(ViewPos_ID, camera.CameraPos[0], camera.CameraPos[1], camera.CameraPos[2]);
+
+      glUniform1f(Timer, Time);
       glUniformMatrix4fv(UModel, 1, GL_FALSE,(const float*)ModelMatrix);
       glUniformMatrix4fv(UView, 1, GL_FALSE,(const float*)camera.ViewMatrix);
       glUniformMatrix4fv(UProjection, 1, GL_FALSE,(const float*)ProjectionMatrix);
-
-
-      glUniform1f(ID_X, x);
-      glUniform1f(ID_Y, y);
-
-
-
-      glUniform1f(Timer, Time);
       glUniformMatrix4fv(MatrixUniform, 1, GL_FALSE,(const float*)Trans);
-
-      glUseProgram(ID_Program);
-
-      glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-      glClear(GL_COLOR_BUFFER_BIT);
-
-
 
       glBindVertexArray(VAO1);
       glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      glUseProgram(ID_LightProgram);
+      glUniform1f(Timer, Time);
+      glUniformMatrix4fv(UlightModel, 1, GL_FALSE,(const float*)ModelMatrix);
+      glUniformMatrix4fv(ULightView, 1, GL_FALSE,(const float*)camera.ViewMatrix);
+      glUniformMatrix4fv(ULightProjection, 1, GL_FALSE,(const float*)ProjectionMatrix);
+      glUniformMatrix4fv(ULighTrans, 1, GL_FALSE,(const float*)LightTransMatrix);
+      glBindVertexArray(VAOLight);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
 
       SDL_GL_SwapWindow(app.Window);
    }
