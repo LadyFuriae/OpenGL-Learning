@@ -24,7 +24,7 @@ bool CreateShader(Shader* src, const char* FileName, const GLenum type)
     fread(Data,  1, sizeof(Data), file);
     fclose(file);
 
-    printf("\nShader:\n %s", Data);
+    //printf("\nShader:\n %s", Data);
 
     src->Type = type;
     const int ShaderID = glCreateShader(src->Type);

@@ -14,8 +14,6 @@ uniform mat4 Model;
 uniform mat4 View;
 uniform mat4 Projection;
 
-
-
 out vec3 Normal;
 out vec3 FinalColor;
 out vec3 FragPos;
@@ -35,5 +33,5 @@ void main()
     //float g = cos(aPos.y + Timer * 1.8) * 0.5 + 0.5;
     //float b = sin(aPos.z + Timer * 1.7) * 0.5 + 0.5;
     //FinalColor = vec3(r,g,b);
-    //aTexPos = aTexCoord;
+    aTexPos = aTexCoord;
 }

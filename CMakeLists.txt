@@ -5,9 +5,10 @@ set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 add_compile_options(-pedantic -Wall -Wextra)
 
-# SDL3
+# SDL3 y Assimp
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SDL3 REQUIRED sdl3)
+pkg_check_modules(ASSIMP REQUIRED assimp)
 
 # Importar glad.o (objeto precompilado)
 set(GLAD_OBJECT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/glad.o")
@@ -52,6 +53,7 @@ endwhile()
 
 # --- Configuración explícita de Includes Externos ---
 list(APPEND INCLUDE_DIRS ${SDL3_INCLUDE_DIRS})
+list(APPEND INCLUDE_DIRS ${ASSIMP_INCLUDE_DIRS})
 
 # Aseguramos de que el compilador encuentre <cglm/cglm.h> sin importar cómo esté estructurada la carpeta
 list(APPEND INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/external")
@@ -60,9 +62,10 @@ target_include_directories(GPU PRIVATE ${INCLUDE_DIRS})
 
 # Enlazar bibliotecas
 target_link_libraries(GPU PRIVATE
-    glad
-    ${SDL3_LIBRARIES}
-    -lGL
-    -lm
-    -ldl
+        glad
+        ${SDL3_LIBRARIES}
+        ${ASSIMP_LIBRARIES}
+        -lGL
+        -lm
+        -ldl
 )

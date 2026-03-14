@@ -17,7 +17,7 @@ void PrepareCamera(Camera* camera)
 
     camera->Yaw = -90.0f;
     camera->Pitch = 0.0f;
-    camera->CameraSpeed = 1.0f;
+    camera->CameraSpeed = 0.02f;
     camera->Sensitivity = 0.1f;
 }
 
