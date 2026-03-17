@@ -6,8 +6,8 @@ in vec3 Normal;
 //in vec3 FinalColor;
 in vec2 aTexPos;
 
-uniform sampler2D TexDiff;
-uniform sampler2D TexSpecular;
+layout (binding = 0) uniform sampler2D TexDiff;
+layout (binding = 1) uniform sampler2D TexSpecular;
 
 uniform vec3 ViewPos;
 
@@ -44,8 +44,8 @@ void main()
 
     if(texColor.a < 0.3)
     {
-        discard; // Aquí está el "discard" que menciona tu amigo
+        discard;
     }
-    // Ahora sí podemos multiplicar sus componentes por la luz
+
     FragColor = vec4(texColor.rgb * result , texColor.a);
 }

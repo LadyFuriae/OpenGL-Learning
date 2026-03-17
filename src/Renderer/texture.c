@@ -14,23 +14,44 @@ void LoadTexture(Texture* texture, const char* path)
         SDL_Log("Failed loading texture");
     }
 }
+void GetTexturePath(const char* ModelPath, const char* TexturePath, char* FinalPath) {
+    char* name = strrchr(TexturePath, '\\');
+    if (!name)
+    {
+        name = strrchr(TexturePath, '/');
+    }
+    name++;
+
+    strncpy(FinalPath, ModelPath, strlen(ModelPath));
+
+    char* ptr = strrchr(FinalPath, '\\');
+    if (!ptr)
+    {
+        ptr = strrchr(FinalPath, '/');
+    }
+    ptr++;
+    for (; *name != '\0'; name++, ptr++)
+    {
+        *ptr = *name;
+    }
+    *ptr = '\0';
+}
 
 void CreateSample(const int Program_ID, const char* SamplerName,const int SamplerNumber)
 {
-    glUniform1i(glGetUniformLocation(Program_ID, SamplerName), SamplerNumber);
+    //glUniform1i(glGetUniformLocation(Program_ID, SamplerName), SamplerNumber);
 }
 
-void CreateTexture(Texture* texture ,const int Type, const int SamplerNumber, const int NumberOfTextures, const int Format)
+void CreateTexture(Texture* texture ,const int Type, const int SamplerNumber, const int NumberOfTextures)
 {
-    glGenTextures(NumberOfTextures, &texture->ID_Texture);
+    glGenTextures(NumberOfTextures, &texture->ID);
     glActiveTexture(GL_TEXTURE0 + SamplerNumber);
-    glBindTexture(Type, texture->ID_Texture);
+    glBindTexture(Type, texture->ID);
     texture->Type = Type;
     texture->SamplerID = SamplerNumber;
-    texture->Format = Format;
 }
 
-void SetTextureParams(const Texture* texture, unsigned int Mode)
+void SetTextureParams(const Texture* texture, const GLint Mode)
 {
     glTexParameteri(texture->Type, GL_TEXTURE_WRAP_S, Mode);
     glTexParameteri(texture->Type, GL_TEXTURE_WRAP_T, Mode);

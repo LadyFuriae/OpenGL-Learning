@@ -12,7 +12,7 @@ typedef struct
 bool CreateShader(Shader* src, const char* FileName, GLenum type);
 bool CheckShaderComp(const Shader* src);
 bool LinkShaderProgram(int ID_Program);
-int SetCubeShader();
+int SetModelShader();
 int SetLightShader();
 
 //void AddShadersToProgram(int ShProgram, int ShaderIDs[], int Count);

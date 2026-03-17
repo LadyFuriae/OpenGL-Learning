@@ -70,7 +70,7 @@ bool LinkShaderProgram(const int ID_Program)
     return true;
 }
 
-int SetCubeShader()
+int SetModelShader()
 {
     Shader VertexShader;
 

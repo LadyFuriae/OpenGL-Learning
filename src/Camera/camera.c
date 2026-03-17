@@ -77,4 +77,13 @@ void ManageKeyboard(const bool* State, Camera* camera)
         glm_vec3_scale(camera->CameraFront, camera->CameraSpeed, finalPos);
         glm_vec3_sub(camera->CameraPos, finalPos, camera->CameraPos);
     }
+    if (State[SDL_SCANCODE_2])
+    {
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
+    if (State[SDL_SCANCODE_1])
+    {
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    }
 }
