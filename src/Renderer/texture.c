@@ -39,7 +39,7 @@ void GetTexturePath(const char* ModelPath, const char* TexturePath, char* FinalP
 
 void CreateSample(const int Program_ID, const char* SamplerName,const int SamplerNumber)
 {
-    //glUniform1i(glGetUniformLocation(Program_ID, SamplerName), SamplerNumber);
+    glUniform1i(glGetUniformLocation(Program_ID, SamplerName), SamplerNumber);
 }
 
 void CreateTexture(Texture* texture ,const int Type, const int SamplerNumber, const int NumberOfTextures)

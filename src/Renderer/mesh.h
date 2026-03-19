@@ -1,7 +1,6 @@
 #ifndef GPU_MESH_H
 #define GPU_MESH_H
-#include <texture.h>
-#include <vertex.h>
+#include <Renderer/vertex.h>
 #include <material.h>
 typedef struct
 {

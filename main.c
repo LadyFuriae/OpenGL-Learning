@@ -13,6 +13,8 @@
 
 #include <model.h>
 
+#include "normalcube.h"
+
 //FANCY SHADER
 #define SDL_MAIN_HANDLED
 
@@ -42,12 +44,35 @@ int main()
 
    const int ID_ModelProgram  = SetModelShader();
    const int ID_LightProgram = SetLightShader();
+   const int ID_NormalCubeProgram = SetNormalCubeShader();
+   glUseProgram(ID_NormalCubeProgram);
+   Texture NormalCubeTex;
+   LoadTexture(&NormalCubeTex, "/home/ladyfuriae/Downloads/OpenGL/game/textures/container2.png");
+   CreateSample(ID_NormalCubeProgram, "material.diffuse", 0);
+   CreateTexture(&NormalCubeTex, GL_TEXTURE_2D, 0, 1);
+   SetTextureParams(&NormalCubeTex, GL_RGBA8);
+   NormalCubeTex.Format = GL_RGBA;
+   NormalCubeTex.InternType = GL_RGBA8;
+   GenerateTexture(&NormalCubeTex);
+
+   Texture SpecularCubeTex;
+   LoadTexture(&SpecularCubeTex, "/home/ladyfuriae/Downloads/OpenGL/game/textures/container2_specular.png");
+   CreateSample(ID_NormalCubeProgram, "material.specular", 1);
+   CreateTexture(&SpecularCubeTex, GL_TEXTURE_2D, 1, 1);
+   SetTextureParams(&SpecularCubeTex, GL_RGBA8);
+   SpecularCubeTex.Format = GL_RGBA;
+   SpecularCubeTex.InternType = GL_RGBA8;
+   GenerateTexture(&SpecularCubeTex);
 
    if (!ID_ModelProgram)
       return -1;
 
    if(!ID_LightProgram)
       return -1;
+
+   if (!ID_NormalCubeProgram)
+      return -1;
+
 
    const int ULighTrans = glGetUniformLocation(ID_LightProgram, "Trans");
    const int UlightModel = glGetUniformLocation(ID_LightProgram, "Model");
@@ -120,6 +145,61 @@ int main()
    float deltaTime = 0.0f;
    float lastFrame = 0.0f;
 
+   //SetNormalCubeUniforms
+   glUseProgram(ID_NormalCubeProgram);
+   const int uNCTtransM = glGetUniformLocation(ID_NormalCubeProgram, "Trans");
+   const int uNCTModelM = glGetUniformLocation(ID_NormalCubeProgram, "Model");
+   const int uNCViewM = glGetUniformLocation(ID_NormalCubeProgram, "View");
+   const int uNCProjM = glGetUniformLocation(ID_NormalCubeProgram, "Projection");
+
+   const int uNCAmbient = glGetUniformLocation(ID_NormalCubeProgram, "material.ambient");
+   const int uNCDiff = glGetUniformLocation(ID_NormalCubeProgram, "material.diffuse");
+   const int uNCSpec = glGetUniformLocation(ID_NormalCubeProgram, "material.specular");
+   const int uNCShininess = glGetUniformLocation(ID_NormalCubeProgram, "material.shininess");
+   const int uNCLightColor = glGetUniformLocation(ID_NormalCubeProgram, "LightColor");
+   const int uNCViewPos = glGetUniformLocation(ID_NormalCubeProgram, "ViewPos");
+   const int uNCObjColor = glGetUniformLocation(ID_NormalCubeProgram, "ObjColor");
+
+   const int uNCLightPos = glGetUniformLocation(ID_NormalCubeProgram, "light.position");
+   const int uNCLighDir = glGetUniformLocation(ID_NormalCubeProgram, "light.direction");
+   const int uNCLightCutoff = glGetUniformLocation(ID_NormalCubeProgram, "light.cutOff");
+   const int uNCLightOuterCutoff = glGetUniformLocation(ID_NormalCubeProgram, "light.outerCutOff");
+
+   const int uNCLightAmbient = glGetUniformLocation(ID_NormalCubeProgram, "light.ambient");
+   const int uNCLightDiffuse = glGetUniformLocation(ID_NormalCubeProgram, "light.diffuse");
+   const int uNCLightSpecular = glGetUniformLocation(ID_NormalCubeProgram, "light.specular");
+
+   const int uNCLightConstant = glGetUniformLocation(ID_NormalCubeProgram, "light.constant");
+   const int uNCLightLinear = glGetUniformLocation(ID_NormalCubeProgram, "light.linear");
+   const int uNCLightQuadratic = glGetUniformLocation(ID_NormalCubeProgram, "light.quadratic");
+
+   vec3 NCPos = {-9.0f, 1.0f, 1.0f};
+
+   mat4 NCModelMatrix = GLM_MAT4_IDENTITY_INIT;
+   mat4 NCTransMatrix = GLM_MAT4_IDENTITY_INIT;
+
+   glm_translate(NCTransMatrix, NCPos);
+   glm_scale(NCModelMatrix, (vec3){1.0f, 1.0f, 1.0f});
+
+   glUniformMatrix4fv(uNCTtransM, 1, GL_FALSE, (const float*)NCTransMatrix);
+   glUniformMatrix4fv(uNCProjM, 1, GL_FALSE, (const float*)ProjectionMatrix);
+   glUniform3f(uNCLightColor, 1.0f, 1.0f, 1.0f);
+   glUniform3f(uNCLightPos, lightPos[0], lightPos[1], lightPos[2]);
+
+   //glUniform3f(uNCAmbient, 0.5f,0.2f,0.6f);
+   //glUniform3f(uNCDiff, 0.5f,0.5f, 0.5f);
+   //glUniform3f(uNCSpec, 0.5f, 0.5f, 0.5f);
+   glUniform1f(uNCShininess, 64.0f);
+
+   glUniform3f(uNCLightAmbient, 0.2f, 0.2f, 0.2f);
+   glUniform3f(uNCLightDiffuse, 0.9f, 0.9f, 0.9f);
+   glUniform3f(uNCLightSpecular, 12.0f, 12.0f, 12.0f);
+   glUniform1f(uNCLightConstant, 1.0f);
+   glUniform1f(uNCLightLinear, 0.07f);
+   glUniform1f(uNCLightQuadratic, 0.032f);
+
+   unsigned int NCVAO = PrepareNormalCube(NormalCubeVertices, 36);
+   float cutOff = 1.0f;
    while(Running)
    {
       SDL_Event event;
@@ -137,6 +217,24 @@ int main()
                isEnabled = !isEnabled;
                SDL_SetWindowRelativeMouseMode(app.Window, isEnabled);
             }
+         }
+
+         else if (event.type == SDL_EVENT_MOUSE_WHEEL)
+         {
+            if (event.wheel.y < 0)
+            {
+               printf("Up\n");
+               cutOff++;
+            }
+            else if (event.wheel.y > 0)
+            {
+               printf("Down\n");
+               cutOff--;
+            }
+
+
+
+
          }
       }
       ManageKeyboard(State, &camera);
@@ -162,14 +260,39 @@ int main()
 
       mat4 ModelMatrix = GLM_MAT4_IDENTITY_INIT;
 
+      
+
        glUseProgram(ID_LightProgram);
-       glUniform1f(Timer, Time);
+       //glUniform1f(Timer, Time);
        glUniformMatrix4fv(UlightModel, 1, GL_FALSE,(const float*)ModelMatrix);
        glUniformMatrix4fv(ULightView, 1, GL_FALSE,(const float*)camera.ViewMatrix);
        glUniformMatrix4fv(ULightProjection, 1, GL_FALSE,(const float*)ProjectionMatrix);
        glUniformMatrix4fv(ULighTrans, 1, GL_FALSE,(const float*)LightTransMatrix);
        glBindVertexArray(VAO_Cube);
        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      glUseProgram(ID_NormalCubeProgram);
+
+      //glm_rotate(NCTransMatrix, glm_rad(0.5f), (vec3){0.5f, 1.0f, 1.0f});
+      glm_mat4_identity(NCTransMatrix);
+      float time = SDL_GetTicks() / 1000.0f;
+      //glm_translate(NCTransMatrix, (vec3){sinf(time * 0.3f) *50.0f, 0.0f, 0.0f});
+      glUniformMatrix4fv(uNCViewM, 1, GL_FALSE, (const float*)camera.ViewMatrix);
+      glUniformMatrix4fv(uNCTModelM, 1, GL_FALSE, (const float*)NCModelMatrix);
+      glUniformMatrix4fv(uNCTtransM, 1, GL_FALSE, (const float*)NCTransMatrix);
+      glUniform3f(uNCViewPos, camera.CameraPos[0], camera.CameraPos[1], camera.CameraPos[2]);
+      glUniform3f(uNCLightPos, camera.CameraPos[0], camera.CameraPos[1], camera.CameraPos[2]);
+      glUniform3f(uNCLighDir, camera.CameraFront[0], camera.CameraFront[1], camera.CameraFront[2]);
+      glUniform1f(uNCLightCutoff, cosf(glm_rad(cutOff)));
+      glUniform1f(uNCLightOuterCutoff, cosf(glm_rad(cutOff*1.3f)));
+
+
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, NormalCubeTex.ID);
+      glActiveTexture(GL_TEXTURE1);
+      glBindTexture(GL_TEXTURE_2D, SpecularCubeTex.ID);
+      glBindVertexArray(NCVAO);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
 
       glUseProgram(ID_ModelProgram);
       glm_rotate(SwimSuit.PosMatrix, glm_rad(0.9f), (vec3){0.0f, 1.0f, 0.0f});

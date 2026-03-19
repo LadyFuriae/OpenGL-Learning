@@ -28,7 +28,18 @@ add_executable(GPU ${ALL_C_FILES}
         src/App/WinCfg.h
         src/App/WinCfg.c
         src/Shader/Shader.h
-        src/Shader/Shader.c)
+        src/Shader/Shader.c
+        src/Renderer/mesh.h
+        src/Renderer/model.h
+        src/Renderer/vertex.h
+        src/Renderer/model.c
+        src/Renderer/material.h
+        src/Shapes/lightcube.h
+        src/Shapes/lightcube.c
+        src/Shader/modeluniform.h
+        src/Shapes/normalcube.h
+        src/Shapes/NCVertex.h
+        src/Shapes/normalcube.c)
 
 # --- Incluir TODOS los subdirectorios recursivamente (excepto los excluidos) ---
 set(INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})  # La raíz siempre incluida

@@ -360,6 +360,3 @@ void CleanModel(const Model* Model)
       Model->Meshes[i].Indices = nullptr;
    }
 }
-
-
-

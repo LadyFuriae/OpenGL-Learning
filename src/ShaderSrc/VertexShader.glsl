@@ -6,10 +6,6 @@ layout (location = 2) in vec2 aTexCoord;
 
 //layout (location = 1) in vec3 aColor;
 uniform mat4 Trans;
-uniform float Timer;
-uniform float xCoordinate;
-uniform float yCoordinate;
-
 uniform mat4 Model;
 uniform mat4 View;
 uniform mat4 Projection;
